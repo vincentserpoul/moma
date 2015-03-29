@@ -1,0 +1,130 @@
+{{define "eventform"}}
+        <section id="eventform">
+            <form id="momaform">
+                <!-- progressbar -->
+                <ul id="progressbar">
+                    <li class="active">Explication</li>
+                    <li>Qui ?</li>
+                    <li>Quand ?</li>
+                    <li>Quoi ?</li>
+                    <li>O&uacute; ?</li>
+                    <li>Photos ?</li>
+                </ul>
+                <fieldset>
+                    <h2 class="fs-title">Qu'est-ce donc ?</h2>
+                    <p>
+                        Bon, je vais te demander de saisir un ou plusieurs <b>&eacute;v&egrave;nement(s) marquant(s)</b> que tu as pu vivre
+                        <b>avec Matt ou Mo</b> ou les deux et, grosse contrainte, <b>&Agrave; NANTES</b>.<br />
+                        Par exemple, le jour ou Morgan a vomi au plessis renard, ou encore le jour ou Matthieu a eu les flics chez lui a Viarme.
+                    </p>
+                    <input type="button" name="next" class="next action-button" value="Suivant" />
+                </fieldset>
+                <!-- QUI ? -->
+                <fieldset>
+                    <h2 class="fs-title">Qui ?</h2>
+                    <h3 class="fs-subtitle">C'etait avec lequel des deux fans de chat ?
+                    <select name="Who">
+                        <option value="Morgan">Morgan</option>
+                        <option value="Matthieu">Matthieu</option>
+                    </select>
+                    </h3>
+                    <input type="button" name="previous" class="previous action-button" value="Pr&eacute;c&eacute;dent" />
+                    <input type="button" name="next" class="next action-button" value="Suivant" />
+                </fieldset>
+                <!-- QUAND ? -->
+                <fieldset>
+                    <h2 class="fs-title">Quand ?</h2>
+                    <h3 class="fs-subtitle">Et c'&eacute;tait quand, cette histoire ?&nbsp;
+                        <input type="text" id="When" data-format="YYYY-MM-DD" data-template="D MMM YYYY" name="When" value="2001-01-08">
+                        <script>
+                            $jq(function(){
+                                $jq('#When').combodate();
+                            });
+                        </script>
+                    </h3>
+                    <input type="button" name="previous" class="previous action-button" value="Pr&eacute;c&eacute;dent" />
+                    <input type="button" name="next" class="next action-button" value="Suivant" />
+                </fieldset>
+                <!-- QUOI ? -->
+                <fieldset>
+                    <h2 class="fs-title">Quoi ?</h2>
+                    <h3 class="fs-subtitle">Et s'y est pass&eacute; quoi ?</h3>
+                    <textarea name="What" rows="10" cols="50" placeholder="Raconte ici, ce qu'il s'est pass&eacute;, avec un max de d&eacute;tails..."></textarea>
+                    <input type="button" name="previous" class="previous action-button" value="Pr&eacute;c&eacute;dent" />
+                    <input type="button" name="next" class="next action-button" value="Suivant" />
+                </fieldset>
+                <!-- OU -->
+                <fieldset id="mapbox">
+                    <h2 class="fs-title">O&uacute; ?</h2>
+                    <h3 class="fs-subtitle">Montre moi <b>pr&eacute;cis&eacute;ment</b> en zoomant/cliquant/recherchant sur la carte, o&ugrave; c'etait exactement !</h3>
+                    <input type="hidden" id="Lat" name="Lat" />
+                    <input type="hidden" id="Lng" name="Lng" />
+                    <div id="map"></div>
+                    <input type="button" name="previous" class="previous action-button" value="Pr&eacute;c&eacute;dent" />
+                    <input type="button" name="next" class="next action-button" value="Suivant" />
+                </fieldset>
+                <!-- TOFS ? -->
+                <fieldset>
+                    <h2 class="fs-title">Photos ?</h2>
+                    <h3 class="fs-subtitle">Dis moi que tu as pris des <a href="javascript:void(0)" id="uploadWidgetMultiple">photos</a>!</h3>
+                    <div id="Pics"></div>
+                    <ul id="PicThumbs"></ul>
+                    <input type="button" name="previous" class="previous action-button" value="Pr&eacute;c&eacute;dent" />
+                    <input type="button" name="save" class="action-button"value="Enregistrer" href="javascript:void(0)" id="eventSave" />
+                </fieldset>
+            </form>
+        </section>
+        <script src="//widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+        <script src='//api.tiles.mapbox.com/mapbox.js/v2.1.6/mapbox.js'></script>
+        <script>
+            function initMap(){
+
+                L.mapbox.accessToken = 'pk.eyJ1IjoidnNlcnBvdWwiLCJhIjoiYkE5WHQyMCJ9.dVR8G8nKSNUkPi8NZrAZIg';
+                var map = L.mapbox.map('map', 'vserpoul.lhb62h1m')
+                    .setView([47.2173,-1.5534], 9);
+
+                var popup = L.popup();
+
+                function onMapClick(e) {
+                    popup
+                        .setLatLng(e.latlng)
+                        .setContent("c'etait la !")
+                        .openOn(map);
+
+                    jQuery("#momaform input#Lat").val(e.latlng.lat);
+                    jQuery("#momaform input#Lng").val(e.latlng.lng);
+                }
+
+                map.on('click', onMapClick);
+
+                map.addControl(L.mapbox.geocoderControl('mapbox.places', {
+                        autocomplete: true
+                }));
+                mapDisplayed = 1
+            }
+        </script>
+        <script type="text/javascript">
+          $jq("#uploadWidgetMultiple").click(function() {
+              var email = '{{.User.Email}}';
+              var uploadFolder = 'moma/'+email.replace('@', 'AT');
+              cloudinary.openUploadWidget({ cloud_name: 'dhjzlytim'
+                                          , upload_preset: 'gqaoxx72'
+                                          , folder: uploadFolder,
+              },
+              function(error, result) {
+                  result.map( function(item) {
+                      $jq('div#Pics').append(
+                          $jq('<input>').attr('type', 'hidden').attr('name', 'Pic').attr('value', item.url)
+                      );
+
+                      $jq('ul#PicThumbs').append(
+                          $jq('<li>').append(
+                              $jq('<img>').attr('src', item.thumbnail_url)
+                          )
+                      );
+                  })
+              });
+
+          });
+        </script>
+{{end}}

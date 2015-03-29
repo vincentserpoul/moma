@@ -1,0 +1,22 @@
+{{define "auth"}}
+         <section id="auth">
+            <script src="https://login.persona.org/include.js"></script>
+            <script src="/js/vendor/persona.js"></script>
+            <script>
+                var email = "{{.User.Email}}";
+                if (email === "") {
+                    email = null;
+                }
+                navigator.id.watch({
+                    loggedInUser: email,
+                    onlogin: signIn,
+                    onlogout: signOut
+                });
+            </script>
+            {{if .User.Email}}
+                <input type="button" class="action-button" onclick="javascript:navigator.id.logout()" value="Sign out" />
+            {{else}}
+                <input type="button" class="action-button" onclick="javascript:navigator.id.request()" value="Sign in" />
+            {{end}}
+        </section>
+{{end}}

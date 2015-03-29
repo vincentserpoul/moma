@@ -1,0 +1,20 @@
+{{define "user"}}
+        <section id="dashboard">
+            <h1>Salut {{.User.Email}} !</h1>
+            <p>
+                Tu as dej&agrave; saisi {{.UserEventList | len}} &eacute;v&egrave;nement(s) marquant(s) avec Matt&#38;Mo, tu peux les modifier ou en
+                <input type="button" name="addEvent" class="action-button" value="ajouter" id="addEvent" /> un !
+            </p>
+            <ul id="myeventslist">
+                {{range .UserEventList}}
+                    <li id="{{.Id}}">Avec {{.Who}} - {{.When}} - {{.Where}} - {{.What}} <input type="button" value="supprimer" id="eventDel" onclick="deleteEvent({{.Id}})" class="action-button" />
+                        <ul>
+                            {{range .Pic}}
+                                <li><img src="{{.}}" width="200" /></li>
+                            {{end}}
+                        </ul>
+                    </li>
+                {{end}}
+            </ul>
+        </section>
+{{end}}
