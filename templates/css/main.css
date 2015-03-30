@@ -27,8 +27,8 @@ body{
 }
 
 section#auth {
-    width: 20%;
-    margin-left: 80%;
+    margin-right: 10%;
+    float: right;
 }
 
 section#dashboard {
@@ -44,7 +44,7 @@ section#dashboard {
 
     box-sizing: border-box;
     width: 80%;
-    margin: 0 10%;
+    margin: 65px 10% 0 10%;
 }
 
 /*form styles*/
@@ -55,7 +55,7 @@ section#dashboard {
     position: relative;
 }
 
- fieldset {
+fieldset {
     background: white;
     border: 0 none;
     border-radius: 3px;
@@ -178,7 +178,6 @@ input#When{
 blockquote{
     margin:0 auto;
     width: 8ex;
-    display:table;
     color: #FFF;
     font-size: 4.25em;
     font-weight: 600;
@@ -196,3 +195,37 @@ ul#PicThumbs
 }
 
 ul#PicThumbs li { display: inline; }
+
+/* List of events */
+ul.myeventslist
+{
+    list-style-type: none;
+}
+
+ul.myeventslist li.myeventslist {
+    float: left;
+    width: 200px;
+    margin: 10px;
+    display: inline;
+    text-align:center;
+}
+
+ul.myeventslist li.myeventslist ul {
+    margin:0;
+    padding:0;
+    text-align:center;
+    list-style-type: none;
+}
+
+li.imageeventslist{
+    width:200px;
+}
+
+li.imageeventslist img{
+    width:200px;
+    height:200px;
+}
+
+div.clear {
+    clear:both;
+}

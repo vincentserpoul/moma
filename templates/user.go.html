@@ -2,19 +2,34 @@
         <section id="dashboard">
             <h1>Salut {{.User.Email}} !</h1>
             <p>
-                Tu as dej&agrave; saisi {{.UserEventList | len}} &eacute;v&egrave;nement(s) marquant(s) avec Matt&#38;Mo, tu peux les modifier ou en
-                <input type="button" name="addEvent" class="action-button" value="ajouter" id="addEvent" /> un !
+                {{if (.UserEventList | len) gt 0 }}
+                    Tu as d&eacute;j&agrave; saisi {{.UserEventList | len}} &eacute;v&egrave;nement(s) marquant(s) avec Matt&#38;Mo, tu peux les modifier ou en
+                    <input type="button" name="addEvent" class="action-button" value="ajouter" id="addEvent" /> un !
+                {{else}}
+                    Tu n'as saisi aucun &eacute;v&egrave;nement marquant avec Matt&#38;Mo, va donc en
+                    <input type="button" name="addEvent" class="action-button" value="ajouter" id="addEvent" /> un !
+                {{end}}
             </p>
-            <ul id="myeventslist">
+            <ul class="myeventslist">
                 {{range .UserEventList}}
-                    <li id="{{.Id}}">Avec {{.Who}} - {{.When}} - {{.Where}} - {{.What}} <input type="button" value="supprimer" id="eventDel" onclick="deleteEvent({{.Id}})" class="action-button" />
+                    <li class="myeventslist" id="{{.Id}}">
                         <ul>
-                            {{range .Pic}}
-                                <li><img src="{{.}}" width="200" /></li>
+                            {{if (.Pic | len) gt 0 }}
+                                {{range .Pic}}
+                                    <li class="imageeventslist"><img src="{{if .}}{{.}}{{else}}/img/blank.jpg{{end}}" /></li>
+                                {{end}}
+                            {{else}}
+                                <li class="imageeventslist"><img src="/img/blank.jpg" /></li>
                             {{end}}
                         </ul>
+                        {{.When}}<br />
+                        Avec {{.Who}}<br />
+                        <!-- {{.Where}}<br /> -->
+                        {{.What}}<br />
+                        <input type="button" value="supprimer" id="eventDel" onclick="deleteEvent({{.Id}})" class="action-button" />
                     </li>
                 {{end}}
             </ul>
+            <div class="clear"></div>
         </section>
 {{end}}
