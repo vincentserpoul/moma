@@ -16,4 +16,4 @@ rsync /media/vsm/Vertex3/workspace/go/src/github.com/vincentserpoul/moma/moma.ta
 
 # import new docker image in coreosmoma
 ssh coreosmoma "docker load < /home/core/moma.tar"
-ssh coreosmoma "docker stop moma;docker rm moma;docker run -dit --restart=always -v /home/core/www/moma/templates:/templates -v /home/core/www/moma/config:/config --name moma -p 80 --link redis:redisserver vincentserpoul/moma"
+ssh coreosmoma "docker stop moma;docker rm moma;docker run -dit --restart=always -v /home/core/www/moma/templates:/templates -v /home/core/www/moma/config:/config --name moma -p 80:80 --link redis:redisserver vincentserpoul/moma"
