@@ -6,6 +6,18 @@
         <script type="text/javascript">
           moment.locale('fr');
         </script>
+        <script type="text/javascript" src="/js/vendor/jquery.shorten.js"></script>
+        <script language="javascript">
+          $jq(document).ready(function() {
+            $jq("p.What").shorten({
+              showChars: 110,
+              ellipsesText: "...",
+              moreText: "voir plus",
+              lessText: "cacher",
+            });
+          });
+        </script>
+
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>

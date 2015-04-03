@@ -63,8 +63,7 @@ fieldset {
     padding: 20px 30px;
 
     box-sizing: border-box;
-    width: 80%;
-    margin: 0 10%;
+    width: 100%;
 
     /*stacking fieldsets above each other*/
     position: absolute;
@@ -205,25 +204,29 @@ ul.myeventslist
 ul.myeventslist li.myeventslist {
     float: left;
     width: 200px;
-    margin: 10px;
+    margin: 5px;
     display: inline;
     text-align:center;
+    padding:10px;
+    border: 1px solid #DEF2E8;
+    border-radius: 10px;
 }
 
-ul.myeventslist li.myeventslist ul {
+ul.myeventslist li.myeventslist img {
     margin:0;
     padding:0;
-    text-align:center;
-    list-style-type: none;
+    width:200px;
+    border-radius: 10px;
 }
 
-li.imageeventslist{
-    width:200px;
+ul.myeventslist li.myeventslist h5 {
+    margin:1px 0 5px 0;
 }
 
-li.imageeventslist img{
-    width:200px;
-    height:200px;
+ul.myeventslist li.myeventslist p {
+    text-align:justify;
+    min-height: 100px;
+    padding:3px;
 }
 
 div.clear {

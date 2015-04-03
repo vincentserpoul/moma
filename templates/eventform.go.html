@@ -1,5 +1,7 @@
 {{define "eventform"}}
-        <section id="eventform">
+    <aside id="eventformmodal" class="modal">
+        <div>
+            <a href="#close" title="Close">Close</a>
             <form id="momaform">
                 <!-- progressbar -->
                 <ul id="progressbar">
@@ -73,58 +75,59 @@
                     <input type="button" name="save" class="action-button"value="Enregistrer" href="javascript:void(0)" id="eventSave" />
                 </fieldset>
             </form>
-        </section>
-        <script src="//widget.cloudinary.com/global/all.js" type="text/javascript"></script>
-        <script src='//api.tiles.mapbox.com/mapbox.js/v2.1.6/mapbox.js'></script>
-        <script>
-            function initMap(){
+        </div>
+    </aside>
+    <script src="//widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+    <script src='//api.tiles.mapbox.com/mapbox.js/v2.1.6/mapbox.js'></script>
+    <script>
+        function initMap(){
 
-                L.mapbox.accessToken = 'pk.eyJ1IjoidnNlcnBvdWwiLCJhIjoiYkE5WHQyMCJ9.dVR8G8nKSNUkPi8NZrAZIg';
-                var map = L.mapbox.map('map', 'vserpoul.lhb62h1m')
-                    .setView([47.2173,-1.5534], 9);
+            L.mapbox.accessToken = 'pk.eyJ1IjoidnNlcnBvdWwiLCJhIjoiYkE5WHQyMCJ9.dVR8G8nKSNUkPi8NZrAZIg';
+            var map = L.mapbox.map('map', 'vserpoul.lhb62h1m')
+                .setView([47.2173,-1.5534], 9);
 
-                var popup = L.popup();
+            var popup = L.popup();
 
-                function onMapClick(e) {
-                    popup
-                        .setLatLng(e.latlng)
-                        .setContent("c'etait la !")
-                        .openOn(map);
+            function onMapClick(e) {
+                popup
+                    .setLatLng(e.latlng)
+                    .setContent("c'etait la !")
+                    .openOn(map);
 
-                    jQuery("#momaform input#Lat").val(e.latlng.lat);
-                    jQuery("#momaform input#Lng").val(e.latlng.lng);
-                }
-
-                map.on('click', onMapClick);
-
-                map.addControl(L.mapbox.geocoderControl('mapbox.places', {
-                        autocomplete: true
-                }));
-                mapDisplayed = 1
+                jQuery("#momaform input#Lat").val(e.latlng.lat);
+                jQuery("#momaform input#Lng").val(e.latlng.lng);
             }
-        </script>
-        <script type="text/javascript">
-          $jq("#uploadWidgetMultiple").click(function() {
-              var email = '{{.User.Email}}';
-              var uploadFolder = 'moma/'+email.replace('@', 'AT');
-              cloudinary.openUploadWidget({ cloud_name: 'dhjzlytim'
-                                          , upload_preset: 'gqaoxx72'
-                                          , folder: uploadFolder,
-              },
-              function(error, result) {
-                  result.map( function(item) {
-                      $jq('div#Pics').append(
-                          $jq('<input>').attr('type', 'hidden').attr('name', 'Pic').attr('value', item.url)
-                      );
 
-                      $jq('ul#PicThumbs').append(
-                          $jq('<li>').append(
-                              $jq('<img>').attr('src', item.thumbnail_url)
-                          )
-                      );
-                  })
-              });
+            map.on('click', onMapClick);
 
+            map.addControl(L.mapbox.geocoderControl('mapbox.places', {
+                    autocomplete: true
+            }));
+            mapDisplayed = 1
+        }
+    </script>
+    <script type="text/javascript">
+      $jq("#uploadWidgetMultiple").click(function() {
+          var email = '{{.User.Email}}';
+          var uploadFolder = 'moma/'+email.replace('@', 'AT');
+          cloudinary.openUploadWidget({ cloud_name: 'dhjzlytim'
+                                      , upload_preset: 'gqaoxx72'
+                                      , folder: uploadFolder,
+          },
+          function(error, result) {
+              result.map( function(item) {
+                  $jq('div#Pics').append(
+                      $jq('<input>').attr('type', 'hidden').attr('name', 'Pic').attr('value', item.url)
+                  );
+
+                  $jq('ul#PicThumbs').append(
+                      $jq('<li>').append(
+                          $jq('<img>').attr('src', item.thumbnail_url)
+                      )
+                  );
+              })
           });
-        </script>
+
+      });
+    </script>
 {{end}}

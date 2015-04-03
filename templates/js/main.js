@@ -7,7 +7,7 @@ $jq("#eventSave").click(function() {
         contentType: 'application/json; charset=UTF-8',
         data: formData,
         success: function() {
-            window.location.reload(true);
+            document.location='/';
         }
     });
 });
@@ -18,7 +18,7 @@ function deleteEvent(eventId){
         url: "/events/"+eventId,
         type: 'DELETE',
         success: function() {
-            window.location.reload(true);
+            document.location='/';
         }
     });
 };
@@ -158,12 +158,6 @@ $jq(".previous").click(function(){
 });
 
 $jq("#addEvent").click(function(){
-
-    $jq('#eventform').show()
-    //hide the current fieldset with style
-    $jq('#eventform').animate({opacity: 1}, {     //hide the current fieldset with style
-        queue: false,
-        duration: 800,
-        easing: 'easeInOutBack'
-    });
+    document.location='#eventformmodal';
+    return false;
 });

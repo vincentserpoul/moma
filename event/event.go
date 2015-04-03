@@ -73,3 +73,14 @@ func Delete(redisco redis.Conn, eventId string) error {
 
 	return err
 }
+
+func (e *Event) GetFirstImage() string {
+	if len(e.Pic) > 0 {
+		return e.Pic[0]
+	}
+	return ""
+}
+
+func (e *Event) GetFormattedDate() string {
+	return e.When.Format("02/01/2006")
+}

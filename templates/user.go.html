@@ -4,28 +4,18 @@
             <p>
                 {{if (.UserEventList | len) gt 0 }}
                     Tu as d&eacute;j&agrave; saisi {{.UserEventList | len}} &eacute;v&egrave;nement(s) marquant(s) avec Matt&#38;Mo, tu peux les modifier ou en
-                    <input type="button" name="addEvent" class="action-button" value="ajouter" id="addEvent" /> un !
                 {{else}}
                     Tu n'as saisi aucun &eacute;v&egrave;nement marquant avec Matt&#38;Mo, va donc en
-                    <input type="button" name="addEvent" class="action-button" value="ajouter" id="addEvent" /> un !
                 {{end}}
+                <input type="button" name="addEvent" class="action-button" value="ajouter" id="addEvent" /> un !
             </p>
             <ul class="myeventslist">
                 {{range .UserEventList}}
                     <li class="myeventslist" id="{{.Id}}">
-                        <ul>
-                            {{if (.Pic | len) gt 0 }}
-                                {{range .Pic}}
-                                    <li class="imageeventslist"><img src="{{if .}}{{.}}{{else}}/img/blank.jpg{{end}}" /></li>
-                                {{end}}
-                            {{else}}
-                                <li class="imageeventslist"><img src="/img/blank.jpg" /></li>
-                            {{end}}
-                        </ul>
-                        {{.When}}<br />
-                        Avec {{.Who}}<br />
+                        <img src="{{if (.Pic | len) gt 0 }}{{.GetFirstImage}}{{else}}/img/blank.jpg{{end}}" />
+                        <h5>Le {{.GetFormattedDate}} avec {{.Who}}</h5>
                         <!-- {{.Where}}<br /> -->
-                        {{.What}}<br />
+                        <p class="What">{{.What}}</p>
                         <input type="button" value="supprimer" id="eventDel" onclick="deleteEvent({{.Id}})" class="action-button" />
                     </li>
                 {{end}}
