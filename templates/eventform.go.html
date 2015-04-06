@@ -36,8 +36,9 @@
                 <!-- QUAND ? -->
                 <fieldset>
                     <h2 class="fs-title">Quand ?</h2>
-                    <h3 class="fs-subtitle">Et c'&eacute;tait quand, cette histoire ?&nbsp;
-                        <input type="text" id="When" data-format="YYYY-MM-DD" data-template="D MMM YYYY" name="When" value="2001-01-08">
+                    <h3 class="fs-subtitle">
+                        Et c'&eacute;tait quand, cette histoire ? <input type="text" id="When" data-format="YYYY-MM-DD" data-template="D MMM YYYY" name="When" value="2001-01-08"><br />
+                        (mets l'ann&eacute;e au moins, si tu ne sais plus le mois et le jour c'est pas grave !)
                         <script>
                             $jq(function(){
                                 $jq('#When').combodate();
@@ -50,7 +51,7 @@
                 <!-- QUOI ? -->
                 <fieldset>
                     <h2 class="fs-title">Quoi ?</h2>
-                    <h3 class="fs-subtitle">Et s'y est pass&eacute; quoi ?</h3>
+                    <h3 class="fs-subtitle">Et il s'y est pass&eacute; quoi ?</h3>
                     <textarea name="What" rows="10" cols="50" placeholder="Raconte ici, ce qu'il s'est pass&eacute;, avec un max de d&eacute;tails..."></textarea>
                     <input type="button" name="previous" class="previous action-button" value="Pr&eacute;c&eacute;dent" />
                     <input type="button" name="next" class="next action-button" value="Suivant" />
@@ -58,7 +59,10 @@
                 <!-- OU -->
                 <fieldset id="mapbox">
                     <h2 class="fs-title">O&ugrave; ?</h2>
-                    <h3 class="fs-subtitle">Montre moi <b>pr&eacute;cis&eacute;ment</b> en zoomant/cliquant/recherchant sur la carte, o&ugrave; c'etait exactement !</h3>
+                    <h3 class="fs-subtitle">
+                        D'abord, si tu peux me dire approximativement ou c'&eacute;tait : <input name="WhereApprox" id="WhereApprox" type="text" placeholder="26 place Viarme France OU Colombo, Sri Lanka..." size="200" /><br />
+                        Montre moi <b>pr&eacute;cis&eacute;ment</b> en zoomant/cliquant/recherchant sur la carte, o&ugrave; c'etait exactement !
+                    </h3>
                     <input type="hidden" id="Lat" name="Lat" />
                     <input type="hidden" id="Lng" name="Lng" />
                     <div id="map"></div>

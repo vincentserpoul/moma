@@ -17,13 +17,14 @@ type Point struct {
 }
 
 type Event struct {
-	Id    string
-	Email string
-	Who   string
-	When  time.Time
-	Where Point
-	What  string
-	Pic   []string
+	Id          string
+	Email       string
+	Who         string
+	When        time.Time
+	Where       Point
+	WhereApprox string
+	What        string
+	Pic         []string
 }
 
 func GetEventById(redisco redis.Conn, eventId string) (Event, error) {

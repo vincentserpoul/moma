@@ -1,6 +1,7 @@
 $jq("#eventSave").click(function() {
     var momaFormArray = CheckFormToArray($jq("#momaform"));
     var formData = JSON.stringify(momaFormArray);
+    // console.log(formData);return false;
     $jq.ajax({
         url: "/events",
         type: 'POST',
@@ -25,7 +26,7 @@ function deleteEvent(eventId){
 
 /* Check form content */
 function CheckFormToArray(form){
-    var listOfAvailableFields = ["Email", "Who", "What", "When", "Lat", "Lng", "Pic"]
+    var listOfAvailableFields = ["Email", "Who", "What", "When", "WhereApprox", "Lat", "Lng", "Pic"]
     var array = jQuery(form).serializeArray();
     var checkedForm = {};
     jQuery.each(array, function() {
