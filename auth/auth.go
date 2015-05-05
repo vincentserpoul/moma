@@ -81,6 +81,30 @@ func (pa *PersonaAuth) userExists(email string) bool {
 	return pa.Users.Normals[email]
 }
 
+// Check if user exists against user list
+func (pa *PersonaAuth) userIsAdmin(email string) bool {
+	return pa.Users.Admins[email]
+}
+
+func (pa *PersonaAuth) IsAdmin() func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+			email := GetEmail(req)
+			if email == "" {
+				http.Error(res, "Not Authorized", http.StatusUnauthorized)
+				return
+			}
+			isAdmin := pa.userIsAdmin(email)
+			if !isAdmin {
+				log.Fatal(email, " is not admin")
+				http.Error(res, "Not Authorized", http.StatusUnauthorized)
+				return
+			}
+			next.ServeHTTP(res, req)
+		})
+	}
+}
+
 // Basic returns a Handler that checks if user is logged in. Writes a http.StatusUnauthorized
 // if not logged in
 func Persona() func(http.Handler) http.Handler {
