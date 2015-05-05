@@ -19,7 +19,8 @@ import (
 )
 
 type RedisHandler struct {
-	RedisConn redis.Conn
+	RedisConn   redis.Conn
+	personaAuth auth.PersonaAuth
 }
 
 var templates = template.Must(template.ParseGlob("templates/*.go.html"))
@@ -57,6 +58,9 @@ func main() {
 	personaAuth.Users = AuthUsers
 	personaAuth.PersonaUrl = config.PersonaUrl
 
+	// Put persona in handler
+	red.personaAuth = personaAuth
+
 	/* Public router */
 	publicRouter := httprouter.New()
 
@@ -87,6 +91,19 @@ func main() {
 
 	publicRouter.Handler("POST", "/events", protectedMiddlew)
 	publicRouter.Handler("DELETE", "/events/:eventId", protectedMiddlew)
+
+	/* Admin */
+
+	/* admin router */
+	adminRouter := httprouter.New()
+	adminRouter.GET("/users", red.AdminUsers)
+	adminMiddlew := interpose.New()
+	adminMiddlew.Use(auth.Persona())
+	adminMiddlew.Use(personaAuth.IsAdmin())
+
+	adminMiddlew.UseHandler(adminRouter)
+
+	publicRouter.Handler("GET", "/users", adminMiddlew)
 
 	log.Fatal(http.ListenAndServe(config.Port, publicRouter))
 }
@@ -130,7 +147,9 @@ func (red *RedisHandler) User(w http.ResponseWriter, r *http.Request, ps httprou
 	UsrTpl.User = usr
 	UsrTpl.UserEventList = userEvtLst
 	err = templates.ExecuteTemplate(w, "index_signedin", UsrTpl)
-
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (red *RedisHandler) SaveEvent(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -178,4 +197,34 @@ func (red *RedisHandler) DeleteEvent(w http.ResponseWriter, r *http.Request, ps 
 		return
 	}
 	w.Write([]byte("deleted"))
+}
+
+type AdminTemplate struct {
+	Users          []user.User
+	UsersEventList map[string][]event.Event
+}
+
+func (red *RedisHandler) AdminUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	var AdminTpl AdminTemplate
+
+	// We get all users
+	for userEmail, _ := range red.personaAuth.Users.Normals {
+		usr, _ := user.GetUserByEmail(red.RedisConn, userEmail)
+		AdminTpl.Users = append(AdminTpl.Users, usr)
+		var userEvtLst []event.Event
+		for _, eventId := range usr.EventList {
+			evt, err := event.GetEventById(red.RedisConn, eventId)
+			if err != nil {
+				log.Fatal(err)
+			}
+			userEvtLst = append(userEvtLst, evt)
+		}
+		AdminTpl.UsersEventList[usr.Email] = userEvtLst
+	}
+
+	err := templates.ExecuteTemplate(w, "admin_users", AdminTpl)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
