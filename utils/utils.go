@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 )
 
+// RedisConfig contains connection params
 type RedisConfig struct {
 	Host string
 	Port string
@@ -13,10 +14,10 @@ type RedisConfig struct {
 type ApplicationConfig struct {
 	Redis      RedisConfig
 	Port       string
-	PersonaUrl string
+	PersonaURL string
 }
 
-// Config loader from json file
+// LoadConfig Config loader from json file
 func LoadConfig(fileName string) (ApplicationConfig, error) {
 	var config ApplicationConfig
 
