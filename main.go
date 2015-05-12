@@ -24,6 +24,7 @@ import (
 type RedisHandler struct {
 	RedisConn   redis.Conn
 	personaAuth auth.PersonaAuth
+	authoriz    rbacjson.RbacConf
 }
 
 var templates = template.Must(template.ParseGlob("templates/*.go.html"))
@@ -80,6 +81,7 @@ func main() {
 	protectedRouter.GET("/user", red.User)
 	protectedRouter.POST("/events", red.SaveEvent)
 	protectedRouter.DELETE("/events/:eventId", red.DeleteEvent)
+	protectedRouter.GET("/admin", red.Admin)
 
 	protectedMiddlew := interpose.New()
 	protectedMiddlew.Use(auth.Persona())
@@ -95,6 +97,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	//Saving it for future use in RedisHandler
+	red.authoriz = authoriz
+
 	funcGetUserID := auth.GetEmail
 	protectedMiddlew.Use(rbac.InterposeRBAC(authoriz, funcGetUserID))
 
@@ -103,6 +109,7 @@ func main() {
 	publicRouter.Handler("GET", "/user", protectedMiddlew)
 	publicRouter.Handler("POST", "/events", protectedMiddlew)
 	publicRouter.Handler("DELETE", "/events/:eventId", protectedMiddlew)
+	publicRouter.Handler("GET", "/admin", protectedMiddlew)
 
 	log.Fatal(http.ListenAndServe(config.Port, publicRouter))
 }
@@ -111,7 +118,8 @@ func main() {
 func Landing(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	email := auth.GetEmail(r)
 	if email != "" {
-		http.Redirect(w, r, "http://"+r.Host+"/user", http.StatusOK)
+		log.Println("logging in ", email)
+		http.Redirect(w, r, "http://"+r.Host+"/user", http.StatusFound)
 	}
 
 	err := templates.ExecuteTemplate(w, "index_signedout", 302)
@@ -164,17 +172,17 @@ func (red *RedisHandler) SaveEvent(w http.ResponseWriter, r *http.Request, ps ht
 	decoder := json.NewDecoder(r.Body)
 	var evt event.Event
 	err := decoder.Decode(&evt)
-	if err != nil {
-		panic(err)
-	}
+
 	evt.Email = email
-	evt.Save(red.RedisConn)
+	err = evt.Save(red.RedisConn)
 
 	// Update user event list
 	usr, err := user.GetUserByEmail(red.RedisConn, email)
 	usr.EventList = append(usr.EventList, evt.Id)
-	usr.Save(red.RedisConn)
-
+	err = usr.Save(red.RedisConn)
+	if err != nil {
+		panic(err)
+	}
 	// return saved event
 	response, _ := json.Marshal(evt)
 	w.Write(response)
@@ -197,7 +205,7 @@ func (red *RedisHandler) DeleteEvent(w http.ResponseWriter, r *http.Request, ps 
 			break
 		}
 	}
-	usr.Save(red.RedisConn)
+	err = usr.Save(red.RedisConn)
 
 	err = event.Delete(red.RedisConn, eventID)
 	if err != nil {
@@ -205,4 +213,49 @@ func (red *RedisHandler) DeleteEvent(w http.ResponseWriter, r *http.Request, ps 
 		return
 	}
 	w.Write([]byte("deleted"))
+}
+
+// AdminTemplate is going to be used foreach user
+type AdminTemplate struct {
+	User  user.User
+	Users []UserTemplate
+}
+
+// Admin is handling the get request to the main user page
+func (red *RedisHandler) Admin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	var AdmTpl AdminTemplate
+	var err error
+
+	AdmTpl.User, err = user.GetUserByEmail(red.RedisConn, auth.GetEmail(r))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, userRole := range red.authoriz.AppUserRole {
+		usrTmpl := new(UserTemplate)
+		// If he is, we get his desc
+		usr, err := user.GetUserByEmail(red.RedisConn, userRole.UserID)
+		if err != nil {
+			log.Fatal(err)
+		}
+		var userEvtLst []event.Event
+		for _, eventID := range usr.EventList {
+			evt, err := event.GetEventById(red.RedisConn, eventID)
+			if err != nil {
+				log.Fatal(err)
+			}
+			userEvtLst = append(userEvtLst, evt)
+		}
+		usrTmpl.User = usr
+		usrTmpl.UserEventList = userEvtLst
+
+		AdmTpl.Users = append(AdmTpl.Users, *usrTmpl)
+		usrTmpl = nil
+	}
+
+	err = templates.ExecuteTemplate(w, "admin_users", AdmTpl)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

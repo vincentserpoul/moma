@@ -1,0 +1,18 @@
+{{define "admin_users_list"}}
+    {{range .Users}}
+        <section id="dashboard">
+            <h1>{{.User.Email}} !</h1>
+            <ul class="myeventslist">
+                {{range .UserEventList}}
+                    <li class="myeventslist" id="{{.Id}}">
+                        <img src="{{if (.Pic | len) gt 0 }}{{.GetFirstImage}}{{else}}/img/blank.jpg{{end}}" />
+                        <h5>Le {{.GetFormattedDate}} avec {{.Who}}</h5>
+                        <!-- {{.Where}}<br /> -->
+                        <p class="What">{{.What}}</p>
+                    </li>
+                {{end}}
+            </ul>
+            <div class="clear"></div>
+        </section>
+    {{end}}
+{{end}}
