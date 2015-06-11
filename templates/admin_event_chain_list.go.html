@@ -1,0 +1,50 @@
+{{define "admin_event_chain_list"}}
+    <section id="dashboard">
+    	<h1>TEAM 1</h1>
+        <ul class="myeventslist">
+            {{range .EventListTeam1}}
+                <li class="myeventslist" id="{{.Id}}">
+                    <img src="{{if (.Pic | len) gt 0 }}{{.GetFirstImage}}{{else}}/img/blank.jpg{{end}}" />
+                    <h5>Le {{.GetFormattedDate}} avec {{.Who}}</h5>
+                    <!-- {{.Where}}<br /> -->
+                    <p class="What">{{.What}}</p>
+                    <form>
+                    	<textarea id="t_{{.Id}}">{{.GetJSON}}</textarea>
+						<input type="button" value="updater" id="eventDel" onclick="updateEvent({{.Id}})" class="action-button" />
+                    </form>
+                </li>
+            {{end}}
+        </ul>
+        <div class="clear"></div>
+        <h1>TEAM 2</h1>
+        <ul class="myeventslist">
+            {{range .EventListTeam2}}
+                <li class="myeventslist" id="{{.Id}}">
+                    <img src="{{if (.Pic | len) gt 0 }}{{.GetFirstImage}}{{else}}/img/blank.jpg{{end}}" />
+                    <h5>Le {{.GetFormattedDate}} avec {{.Who}}</h5>
+                    <!-- {{.Where}}<br /> -->
+                    <p class="What">{{.What}}</p>
+                   <form>
+                    	<textarea id="t_{{.Id}}">{{.GetJSON}}</textarea>
+						<input type="button" value="updater" id="eventDel" onclick="updateEvent({{.Id}})" class="action-button" />
+                </li>
+            {{end}}
+        </ul>
+        <div class="clear"></div>
+        <h1>A ENQUILLER !</h1>
+        <ul class="myeventslist">
+            {{range .EventListNotAssigned}}
+                <li class="myeventslist" id="{{.Id}}">
+                    <img src="{{if (.Pic | len) gt 0 }}{{.GetFirstImage}}{{else}}/img/blank.jpg{{end}}" />
+                    <h5>Le {{.GetFormattedDate}} avec {{.Who}}</h5>
+                    <!-- {{.Where}}<br /> -->
+                    <p class="What">{{.What}}</p>
+                   <form>
+                    	<textarea id="t_{{.Id}}">{{.GetJSON}}</textarea>
+						<input type="button" value="updater" id="eventDel" onclick="updateEvent({{.Id}})" class="action-button" />
+                </li>
+            {{end}}
+        </ul>
+        <div class="clear"></div>                        
+    </section>
+{{end}}
