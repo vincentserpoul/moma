@@ -81,7 +81,9 @@ func main() {
 	protectedRouter.GET("/user", red.User)
 	protectedRouter.POST("/events", red.SaveEvent)
 	protectedRouter.DELETE("/events/:eventId", red.DeleteEvent)
+	protectedRouter.PUT("/events/:eventId", red.UpdateEvent)
 	protectedRouter.GET("/admin", red.Admin)
+	protectedRouter.GET("/admin/eventlist", red.AdminEvent)
 
 	protectedMiddlew := interpose.New()
 	protectedMiddlew.Use(auth.Persona())
@@ -108,8 +110,10 @@ func main() {
 
 	publicRouter.Handler("GET", "/user", protectedMiddlew)
 	publicRouter.Handler("POST", "/events", protectedMiddlew)
+	publicRouter.Handler("PUT", "/events/:eventId", protectedMiddlew)
 	publicRouter.Handler("DELETE", "/events/:eventId", protectedMiddlew)
 	publicRouter.Handler("GET", "/admin", protectedMiddlew)
+	publicRouter.Handler("GET", "/admin/eventlist", protectedMiddlew)
 
 	log.Fatal(http.ListenAndServe(config.Port, publicRouter))
 }
@@ -258,4 +262,100 @@ func (red *RedisHandler) Admin(w http.ResponseWriter, r *http.Request, ps httpro
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// AdminTemplate is going to be used foreach user
+type AdminEventTemplate struct {
+	User                 user.User
+	EventListTeam1       []event.Event
+	EventListTeam2       []event.Event
+	EventListNotAssigned []event.Event
+}
+
+// Admin is handling the get request to the main user page
+func (red *RedisHandler) AdminEvent(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	var AdmTpl AdminEventTemplate
+	var err error
+
+	AdmTpl.User, err = user.GetUserByEmail(red.RedisConn, auth.GetEmail(r))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var allEvtLst []event.Event
+
+	for _, userRole := range red.authoriz.AppUserRole {
+		// If he is, we get his desc
+		usr, err := user.GetUserByEmail(red.RedisConn, userRole.UserID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, eventID := range usr.EventList {
+			evt, err := event.GetEventById(red.RedisConn, eventID)
+			if err != nil {
+				log.Fatal(err)
+			}
+			allEvtLst = append(allEvtLst, evt)
+		}
+	}
+
+	var nextTeam1Id = ""
+	var nextTeam2Id = ""
+
+	// reorder event list according to start bool and next
+	// Find all the starting points
+	for _, usrEvent := range allEvtLst {
+		if usrEvent.StartTeam1 || nextTeam1Id == usrEvent.Id {
+			AdmTpl.EventListTeam1 = append(AdmTpl.EventListTeam1, usrEvent)
+			nextTeam1Id = usrEvent.NextEventId
+		}
+		if usrEvent.StartTeam2 || nextTeam2Id == usrEvent.Id {
+			AdmTpl.EventListTeam2 = append(AdmTpl.EventListTeam2, usrEvent)
+			nextTeam2Id = usrEvent.NextEventId
+		}
+	}
+
+	var alreadyAssigned bool
+
+	for _, usrEvent := range allEvtLst {
+		alreadyAssigned = false
+		for _, usrEventTeam1 := range AdmTpl.EventListTeam1 {
+			if usrEventTeam1.Id == usrEvent.Id {
+				alreadyAssigned = true
+			}
+		}
+		for _, usrEventTeam2 := range AdmTpl.EventListTeam1 {
+			if usrEventTeam2.Id == usrEvent.Id {
+				alreadyAssigned = true
+			}
+		}
+
+		if !alreadyAssigned {
+			AdmTpl.EventListNotAssigned = append(AdmTpl.EventListNotAssigned, usrEvent)
+		}
+	}
+
+	err = templates.ExecuteTemplate(w, "admin_event_chain", AdmTpl)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// SaveEvent is handling the POST event
+func (red *RedisHandler) UpdateEvent(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	decoder := json.NewDecoder(r.Body)
+	var evt event.Event
+	err := decoder.Decode(&evt)
+
+	err = evt.Save(red.RedisConn)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	// return saved event
+	response, _ := json.Marshal(evt)
+	w.Write(response)
+
 }

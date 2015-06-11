@@ -213,6 +213,7 @@ ul.myeventslist li.myeventslist {
 ul.myeventslist li.myeventslist img {
     margin:0;
     padding:0;
+    height: 150px;
     width:200px;
     border-radius: 10px;
 }

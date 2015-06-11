@@ -4,13 +4,13 @@
 scp core@coreosmoma://var/data/dump.rdb ./
 
 # compile docker image for docker env
-docker run --rm -v /mnt/vertex3/workspace/go/src/github.com/vincentserpoul/moma:/src centurylink/golang-builder
+sudo docker run --rm -v /mnt/vertex3/workspace/go/src/github.com/vincentserpoul/moma:/src centurylink/golang-builder
 
 # build docker image with the new compiled binary
-docker build -t vincentserpoul/moma /mnt/vertex3/workspace/go/src/github.com/vincentserpoul/moma
+sudo docker build -t vincentserpoul/moma /mnt/vertex3/workspace/go/src/github.com/vincentserpoul/moma
 
 # save docker images to moma.tar
-docker save vincentserpoul/moma > moma.tar
+sudo docker save vincentserpoul/moma > moma.tar
 
 # rsync static files, templates and confdocker run -dit --restart=always -v /home/core/www/moma/templates:/templates --name moma -p 80:9000 --link redis:redisserver vincentserpoul/moma
 rsync -arv /mnt/vertex3/workspace/go/src/github.com/vincentserpoul/moma/config coreosmoma://home/core/www/moma/

@@ -10,12 +10,13 @@ import (
 	"github.com/nu7hatch/gouuid"
 )
 
-// Represents a Physical Point in geographic notation [lat, lng].
+// Point represents a Physical Point in geographic notation [lat, lng].
 type Point struct {
 	Lat float64
 	Lng float64
 }
 
+// Event used for events
 type Event struct {
 	Id          string
 	Email       string
@@ -25,6 +26,13 @@ type Event struct {
 	WhereApprox string
 	What        string
 	Pic         []string
+	ShortURL    string
+	QRCode      string
+	StartTeam1  bool
+	StartTeam2  bool
+	NextEventId string
+	NextPlaceQ  string
+	Defi        string
 }
 
 func GetEventById(redisco redis.Conn, eventId string) (Event, error) {
@@ -52,6 +60,12 @@ func (e *Event) Save(redisco redis.Conn) error {
 		log.Fatal(err)
 	}
 	_, err = redisco.Do("SET", e.Id, string(jsonEvt))
+
+	return err
+}
+
+func (e *Event) SaveJSON(jsonEvt string, redisco redis.Conn) error {
+	_, err := redisco.Do("SET", e.Id, jsonEvt)
 
 	return err
 }
@@ -84,4 +98,10 @@ func (e *Event) GetFirstImage() string {
 
 func (e *Event) GetFormattedDate() string {
 	return e.When.Format("02/01/2006")
+}
+
+func (e *Event) GetJSON() string {
+	jsonEvt, _ := json.Marshal(e)
+
+	return string(jsonEvt)
 }

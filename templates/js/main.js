@@ -13,6 +13,18 @@ $jq("#eventSave").click(function() {
     });
 });
 
+function updateEvent(eventId){
+    $jq.ajax({
+        url: "/events/"+eventId,
+        type: 'PUT',
+        contentType: 'application/json; charset=UTF-8',
+        data: $jq("textarea#t_"+eventId).val(),        
+        success: function() {
+            document.location='/admin/eventlist';
+        }
+    });
+};
+
 function deleteEvent(eventId){
 
     $jq.ajax({
