@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # save current redis
-scp core@coreosmoma://var/data/dump.rdb ./
+scp core@coreosmoma://var/data/dump.rdb  /mnt/vertex3/workspace/go/src/github.com/vincentserpoul/moma
 
 # compile docker image for docker env
 sudo docker run --rm -v /mnt/vertex3/workspace/go/src/github.com/vincentserpoul/moma:/src centurylink/golang-builder
