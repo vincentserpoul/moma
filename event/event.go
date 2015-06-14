@@ -32,6 +32,7 @@ type Event struct {
 	StartTeam2  bool
 	NextEventId string
 	NextPlaceQ  string
+	CurrPlace   string
 	Defi        string
 }
 
