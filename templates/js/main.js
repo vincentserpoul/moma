@@ -14,16 +14,31 @@ $jq("#eventSave").click(function() {
 });
 
 function updateEvent(eventId){
+    var momaFormArray = CheckFormToArray($jq("#form_"+eventId));
+    var formData = JSON.stringify(momaFormArray);
+     // console.log(formData);return false;
     $jq.ajax({
         url: "/events/"+eventId,
         type: 'PUT',
         contentType: 'application/json; charset=UTF-8',
-        data: $jq("textarea#t_"+eventId).val(),        
+        data: formData,
         success: function() {
             document.location='/admin/eventlist';
         }
     });
 };
+
+// function updateEvent(eventId){
+//     $jq.ajax({
+//         url: "/events/"+eventId,
+//         type: 'PUT',
+//         contentType: 'application/json; charset=UTF-8',
+//         data: $jq("textarea#t_"+eventId).val(),        
+//         success: function() {
+//             document.location='/admin/eventlist';
+//         }
+//     });
+// };
 
 function deleteEvent(eventId){
 
@@ -38,7 +53,7 @@ function deleteEvent(eventId){
 
 /* Check form content */
 function CheckFormToArray(form){
-    var listOfAvailableFields = ["Email", "Who", "What", "When", "WhereApprox", "Lat", "Lng", "Pic"]
+    var listOfAvailableFields = ["Id", "Email", "Who", "What", "When", "WhereApprox", "Lat", "Lng", "Pic", "ShortURL", "QRCode", "Defi", "StartTeam1", "StartTeam2", "NextEventId", "NextPlaceQ"]
     var array = jQuery(form).serializeArray();
     var checkedForm = {};
     jQuery.each(array, function() {
@@ -50,7 +65,9 @@ function CheckFormToArray(form){
                         this.value = Date.now();
                     }
                     convertDate = new Date(this.value);
+                    console.log(this.value)
                     this.value = ISODateString(convertDate);
+                    console.log(this.value)
                     checkedForm['When'] = this.value;
                     break;
                 // Special case for pics
@@ -59,7 +76,7 @@ function CheckFormToArray(form){
                             checkedForm['Pic'] = [];
                     }
                     checkedForm['Pic'].push(this.value);
-                    break;
+                    break;             
                 // Special case for where
                 case 'Lat':
                     if(!checkedForm.hasOwnProperty('Where')){
@@ -73,6 +90,12 @@ function CheckFormToArray(form){
                     }
                     checkedForm['Where'].Lng = parseFloat(this.value);
                     break;
+                case 'StartTeam1':
+                    if(this.value == 'on') {checkedForm['StartTeam1'] = true} else {checkedForm['StartTeam1'] = false};
+                    break;
+                case 'StartTeam2':
+                    if(this.value == 'on') {checkedForm['StartTeam2'] = true} else {checkedForm['StartTeam2'] = false};
+                    break;                                   
                 default:
                     checkedForm[this.name] = this.value;
             }

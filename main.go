@@ -70,6 +70,7 @@ func main() {
 	publicRouter.GET("/", Landing)
 	publicRouter.POST("/auth/signin", personaAuth.SignIn)
 	publicRouter.POST("/auth/signout", personaAuth.SignOut)
+	publicRouter.GET("/events/:eventId", red.ShowEvent)
 
 	middle := interpose.New()
 	middle.UseHandler(publicRouter)
@@ -348,7 +349,6 @@ func (red *RedisHandler) UpdateEvent(w http.ResponseWriter, r *http.Request, ps 
 	decoder := json.NewDecoder(r.Body)
 	var evt event.Event
 	err := decoder.Decode(&evt)
-
 	err = evt.Save(red.RedisConn)
 
 	if err != nil {
@@ -358,4 +358,28 @@ func (red *RedisHandler) UpdateEvent(w http.ResponseWriter, r *http.Request, ps 
 	response, _ := json.Marshal(evt)
 	w.Write(response)
 
+}
+
+// UserTemplate is going to be used foreach user
+type EventTemplate struct {
+	Event event.Event
+}
+
+// User is handling the get request to the main user page
+func (red *RedisHandler) ShowEvent(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	var EvtTpl EventTemplate
+
+	eventID := ps.ByName("eventId")
+
+	evt, err := event.GetEventById(red.RedisConn, eventID)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	EvtTpl.Event = evt
+	err = templates.ExecuteTemplate(w, "event", EvtTpl)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

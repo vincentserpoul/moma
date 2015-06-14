@@ -59,6 +59,7 @@ func (e *Event) Save(redisco redis.Conn) error {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	_, err = redisco.Do("SET", e.Id, string(jsonEvt))
 
 	return err
@@ -100,8 +101,20 @@ func (e *Event) GetFormattedDate() string {
 	return e.When.Format("02/01/2006")
 }
 
+func (e *Event) GetFormattedDateForSave() string {
+	return e.When.Format("2006/01/02")
+}
+
 func (e *Event) GetJSON() string {
 	jsonEvt, _ := json.Marshal(e)
 
 	return string(jsonEvt)
+}
+
+func (e *Event) GetShortWhat() string {
+	shortEvt := e.What
+	if len(e.What) > 100 {
+		shortEvt = e.What[:100] + "..."
+	}
+	return shortEvt
 }

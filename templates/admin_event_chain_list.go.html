@@ -1,50 +1,174 @@
 {{define "admin_event_chain_list"}}
+            {{$eventListNotAssigned := .EventListNotAssigned}}
     <section id="dashboard">
     	<h1>TEAM 1</h1>
-        <ul class="myeventslist">
             {{range .EventListTeam1}}
-                <li class="myeventslist" id="{{.Id}}">
-                    <img src="{{if (.Pic | len) gt 0 }}{{.GetFirstImage}}{{else}}/img/blank.jpg{{end}}" />
-                    <h5>Le {{.GetFormattedDate}} avec {{.Who}}</h5>
-                    <!-- {{.Where}}<br /> -->
-                    <p class="What">{{.What}}</p>
-                    <form>
-                    	<textarea id="t_{{.Id}}">{{.GetJSON}}</textarea>
-						<input type="button" value="updater" id="eventDel" onclick="updateEvent({{.Id}})" class="action-button" />
-                    </form>
-                </li>
-            {{end}}
-        </ul>
+            <h2>{{.Id}} ({{.Email}})</h2>
+            <form id="form_{{.Id}}" class="pure-form pure-form-stacked">
+                <fieldset>
+                    <legend>la petite histoire</legend>
+                    <label for="Id">Id</label>
+                    <input type="hidden" value="{{.Id}}" name="Id" />{{.Id}}<br />
+                    <label for="Email">Email</label>
+                    <input type="hidden" value="{{.Email}}" name="Email" />{{.Email}}<br />
+                    <label for="Who">Who</label>
+                    <input type="hidden" value="{{.Who}}" name="Who"  />{{.Who}}<br />
+                    <label for="When">When</label>
+                    <input type="hidden" value="{{.GetFormattedDateForSave}}" name="When" />{{.GetFormattedDateForSave}}<br />
+                    <label for="Where">Where</label>
+                    <input type="hidden" value="{{.Where.Lat}}" name="Lat" />{{.Where}}<br />
+                    <input type="hidden" value="{{.Where.Lng}}" name="Lng" /><br />
+                    <label for="WhereApprox">WhereApprox</label>
+                    <input type="hidden" value="{{.WhereApprox}}" name="WhereApprox" />{{.WhereApprox}}   <br />  
+                    <label for="What">What</label>
+                    <textarea name="What">{{.What}}</textarea>
+                    {{range .Pic}}
+                        <img src="{{.}}" />
+                    {{end}}
+                    {{range .Pic}}
+                        <input type="hidden" name="Pic" value="{{.}}" /><br />
+                    {{end}}                    
+                    
+                </fieldset>
+                <div class="clear"></div>
+                <fieldset>
+                    <legend>le jeu de piste</legend>
+                    <label for="ShortURL">ShortURL (a remplir par Vincent)</label>
+                    <input name="ShortURL" type="text" value="{{.ShortURL}}" /><br />
+                    <label for="QRCode">QRCode (a remplir par Vincent)</label>
+                    <input name="QRCode" type="text" value="{{.QRCode}}" /><img src="{{.QRCode}}" /><br />
+                    <label for="Defi">Quel est le defi specifique pour cette etape ?</label>      
+                    <input name="Defi" type="text" value="{{.Defi}}" />         <br />
+                    <label for="StartTeam1">est-ce la premiere etape pour la team1?</label>
+                    <input name="StartTeam1" type="checkbox" {{if .StartTeam1}}checked="checked"{{end}} /><br />
+                    <label for="StartTeam2">est-ce la premiere etape pour la team2 ?</label>
+                    <input name="StartTeam2" type="checkbox" {{if .StartTeam2}}checked="checked"{{end}} /><br />
+                    <label for="NextEventId">Quelle est l'evenement suivant dans les etapes ?</label>
+                    <select name="NextEventId">
+                        {{$selectedNextEventId := .NextEventId}}
+                        <option value="" />c'est la derniere etape</option>
+                        {{range $eventListNotAssigned}}
+                            <option value="{{.Id}}" {{if eq .Id $selectedNextEventId}}selected="selected"{{end}}>{{.Id}} ({{.Email}}) {{.GetShortWhat}}</option>
+                        {{end}}
+                    </select><br />
+                    <label for="NextPlaceQ">Quelle est la devinette pour trouver l'emplacement du QRCode suivant ?</label>      
+                    <input name="NextPlaceQ" type="text" value="{{.NextPlaceQ}}" /><br />
+                </fieldset>
+                <input type="button" class="pure-button pure-button-primary" onClick="updateEvent({{.Id}});" value="Save" />
+            </form>
+            {{end}}  
         <div class="clear"></div>
         <h1>TEAM 2</h1>
-        <ul class="myeventslist">
             {{range .EventListTeam2}}
-                <li class="myeventslist" id="{{.Id}}">
-                    <img src="{{if (.Pic | len) gt 0 }}{{.GetFirstImage}}{{else}}/img/blank.jpg{{end}}" />
-                    <h5>Le {{.GetFormattedDate}} avec {{.Who}}</h5>
-                    <!-- {{.Where}}<br /> -->
-                    <p class="What">{{.What}}</p>
-                   <form>
-                    	<textarea id="t_{{.Id}}">{{.GetJSON}}</textarea>
-						<input type="button" value="updater" id="eventDel" onclick="updateEvent({{.Id}})" class="action-button" />
-                </li>
-            {{end}}
-        </ul>
-        <div class="clear"></div>
+            <h2>{{.Id}} ({{.Email}})</h2>
+            <form id="form_{{.Id}}" class="pure-form pure-form-stacked">
+                <fieldset>
+                    <legend>la petite histoire</legend>
+                    <label for="Id">Id</label>
+                    <input type="hidden" value="{{.Id}}" name="Id" />{{.Id}}<br />
+                    <label for="Email">Email</label>
+                    <input type="hidden" value="{{.Email}}" name="Email" />{{.Email}}<br />
+                    <label for="Who">Who</label>
+                    <input type="hidden" value="{{.Who}}" name="Who"  />{{.Who}}<br />
+                    <label for="When">When</label>
+                    <input type="hidden" value="{{.GetFormattedDateForSave}}" name="When" />{{.GetFormattedDateForSave}}<br />
+                    <label for="Where">Where</label>
+                    <input type="hidden" value="{{.Where.Lat}}" name="Lat" />{{.Where}}<br />
+                    <input type="hidden" value="{{.Where.Lng}}" name="Lng" /><br />
+                    <label for="WhereApprox">WhereApprox</label>
+                    <input type="hidden" value="{{.WhereApprox}}" name="WhereApprox" />{{.WhereApprox}}   <br />  
+                    <label for="What">What</label>
+                    <textarea name="What">{{.What}}</textarea>
+                    {{range .Pic}}
+                        <img src="{{.}}" />
+                    {{end}}
+                    {{range .Pic}}
+                        <input type="hidden" name="Pic" value="{{.}}" /><br />
+                    {{end}}                    
+                    
+                </fieldset>
+                <div class="clear"></div>
+                <fieldset>
+                    <legend>le jeu de piste</legend>
+                    <label for="ShortURL">ShortURL (a remplir par Vincent)</label>
+                    <input name="ShortURL" type="text" value="{{.ShortURL}}" /><br />
+                    <label for="QRCode">QRCode (a remplir par Vincent)</label>
+                    <input name="QRCode" type="text" value="{{.QRCode}}" /><img src="{{.QRCode}}" /><br />
+                    <label for="Defi">Quel est le defi specifique pour cette etape ?</label>      
+                    <input name="Defi" type="text" value="{{.Defi}}" />         <br />
+                    <label for="StartTeam1">est-ce la premiere etape pour la team1?</label>
+                    <input name="StartTeam1" type="checkbox" {{if .StartTeam1}}checked="checked"{{end}} /><br />
+                    <label for="StartTeam2">est-ce la premiere etape pour la team2 ?</label>
+                    <input name="StartTeam2" type="checkbox" {{if .StartTeam2}}checked="checked"{{end}} /><br />
+                    <label for="NextEventId">Quelle est l'evenement suivant dans les etapes ?</label>
+                    <select name="NextEventId">
+                        {{$selectedNextEventId := .NextEventId}}
+                        <option value="" />c'est la derniere etape</option>
+                        {{range $eventListNotAssigned}}
+                            <option value="{{.Id}}" {{if eq .Id $selectedNextEventId}}selected="selected"{{end}}>{{.Id}} ({{.Email}}) {{.GetShortWhat}}</option>
+                        {{end}}
+                    </select><br />
+                    <label for="NextPlaceQ">Quelle est la devinette pour trouver l'emplacement du QRCode suivant ?</label>      
+                    <input name="NextPlaceQ" type="text" value="{{.NextPlaceQ}}" /><br />
+                </fieldset>
+                <input type="button" class="pure-button pure-button-primary" onClick="updateEvent({{.Id}});" value="Save" />
+            </form>
+            {{end}}  
         <h1>A ENQUILLER !</h1>
-        <ul class="myeventslist">
-            {{range .EventListNotAssigned}}
-                <li class="myeventslist" id="{{.Id}}">
-                    <img src="{{if (.Pic | len) gt 0 }}{{.GetFirstImage}}{{else}}/img/blank.jpg{{end}}" />
-                    <h5>Le {{.GetFormattedDate}} avec {{.Who}}</h5>
-                    <!-- {{.Where}}<br /> -->
-                    <p class="What">{{.What}}</p>
-                   <form>
-                    	<textarea id="t_{{.Id}}">{{.GetJSON}}</textarea>
-						<input type="button" value="updater" id="eventDel" onclick="updateEvent({{.Id}})" class="action-button" />
-                </li>
-            {{end}}
-        </ul>
-        <div class="clear"></div>                        
+            {{range $eventListNotAssigned}}
+            <h2>{{.Id}} ({{.Email}})</h2>
+            <form id="form_{{.Id}}" class="pure-form pure-form-stacked">
+                <fieldset>
+                    <legend>la petite histoire</legend>
+                    <label for="Id">Id</label>
+                    <input type="hidden" value="{{.Id}}" name="Id" />{{.Id}}<br />
+                    <label for="Email">Email</label>
+                    <input type="hidden" value="{{.Email}}" name="Email" />{{.Email}}<br />
+                    <label for="Who">Who</label>
+                    <input type="hidden" value="{{.Who}}" name="Who"  />{{.Who}}<br />
+                    <label for="When">When</label>
+                    <input type="hidden" value="{{.GetFormattedDateForSave}}" name="When" />{{.GetFormattedDateForSave}}<br />
+                    <label for="Where">Where</label>
+                    <input type="hidden" value="{{.Where.Lat}}" name="Lat" />{{.Where}}<br />
+                    <input type="hidden" value="{{.Where.Lng}}" name="Lng" /><br />
+                    <label for="WhereApprox">WhereApprox</label>
+                    <input type="hidden" value="{{.WhereApprox}}" name="WhereApprox" />{{.WhereApprox}}   <br />  
+                    <label for="What">What</label>
+                    <textarea name="What">{{.What}}</textarea>
+                    {{range .Pic}}
+                        <img src="{{.}}" />
+                    {{end}}
+                    {{range .Pic}}
+                        <input type="hidden" name="Pic" value="{{.}}" /><br />
+                    {{end}}                    
+                    
+                </fieldset>
+                <div class="clear"></div>
+                <fieldset>
+                    <legend>le jeu de piste</legend>
+                    <label for="ShortURL">ShortURL (a remplir par Vincent)</label>
+                    <input name="ShortURL" type="text" value="{{.ShortURL}}" /><br />
+                    <label for="QRCode">QRCode (a remplir par Vincent)</label>
+                    <input name="QRCode" type="text" value="{{.QRCode}}" /><img src="{{.QRCode}}" /><br />
+                    <label for="Defi">Quel est le defi specifique pour cette etape ?</label>      
+                    <input name="Defi" type="text" value="{{.Defi}}" />         <br />
+                    <label for="StartTeam1">est-ce la premiere etape pour la team1?</label>
+                    <input name="StartTeam1" type="checkbox" {{if .StartTeam1}}checked="checked"{{end}} /><br />
+                    <label for="StartTeam2">est-ce la premiere etape pour la team2 ?</label>
+                    <input name="StartTeam2" type="checkbox" {{if .StartTeam2}}checked="checked"{{end}} /><br />
+                    <label for="NextEventId">Quelle est l'evenement suivant dans les etapes ?</label>
+                    <select name="NextEventId">
+                        {{$selectedNextEventId := .NextEventId}}
+                        <option value="" />c'est la derniere etape</option>
+                        {{range $eventListNotAssigned}}
+                            <option value="{{.Id}}" {{if eq .Id $selectedNextEventId}}selected="selected"{{end}}>{{.Id}} ({{.Email}}) {{.GetShortWhat}}</option>
+                        {{end}}
+                    </select><br />
+                    <label for="NextPlaceQ">Quelle est la devinette pour trouver l'emplacement du QRCode suivant ?</label>      
+                    <input name="NextPlaceQ" type="text" value="{{.NextPlaceQ}}" /><br />
+                </fieldset>
+                <input type="button" class="pure-button pure-button-primary" onClick="updateEvent({{.Id}});" value="Save" />
+            </form>
+            {{end}}            
     </section>
 {{end}}

@@ -1,0 +1,35 @@
+html {
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+body{
+    font-family: 'Lato', sans-serif;
+    padding:20px;
+}
+
+section#auth {
+    margin-right: 10%;
+    float: right;
+}
+
+label{
+	font-weight:bolder;
+}
+
+textarea {
+	width:90%;
+	height:200px;
+}
+
+input {
+	width:90%;
+}
+
+form {
+	margin-bottom:50px;
+	border-bottom: 1px solid black;
+	padding:20px;
+}
