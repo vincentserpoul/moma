@@ -53,7 +53,7 @@ function deleteEvent(eventId){
 
 /* Check form content */
 function CheckFormToArray(form){
-    var listOfAvailableFields = ["Id", "Email", "Who", "What", "When", "WhereApprox", "Lat", "Lng", "Pic", "ShortURL", "QRCode", "Defi", "StartTeam1", "StartTeam2", "NextEventId", "NextPlaceQ"]
+    var listOfAvailableFields = ["Id", "Email", "Who", "What", "When", "WhereApprox", "Lat", "Lng", "Pic", "ShortURL", "QRCode", "Defi", "StartTeam1", "StartTeam2", "NextEventId", "NextPlaceQ", "Rebus", "CurrPlace"]
     var array = jQuery(form).serializeArray();
     var checkedForm = {};
     jQuery.each(array, function() {

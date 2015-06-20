@@ -34,6 +34,7 @@ type Event struct {
 	NextPlaceQ  string
 	CurrPlace   string
 	Defi        string
+	Rebus       string
 }
 
 func GetEventById(redisco redis.Conn, eventId string) (Event, error) {
