@@ -154,9 +154,12 @@ func GetTeamEvents(team string, allEvtLst []*Event) []*Event {
 	startingEvent := GetStartingEvent(team, allEvtLst)
 	var teamEventList []*Event
 	var nextEvent *Event
+
 	if startingEvent == nil {
 		return teamEventList
 	}
+	teamEventList = append(teamEventList, startingEvent)
+
 	nextEventId := startingEvent.NextEventId
 	safeLoop := 0
 	for nextEventId != "" {
