@@ -1,0 +1,26 @@
+{{define "admin_print_event_chain"}}
+<!doctype html>
+<html class="no-js" lang="fr">
+    {{template "headsimple"}}
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+		{{range .EventListTeam1}}
+			<div style="float:left;padding:5px;text-align:center;">
+			<img src="{{.QRCode}}" /><br />
+			{{.CurrPlace}}
+			</div>
+		{{end}}
+
+		{{range .EventListTeam2}}
+			<div style="float:left;padding:5px;text-align:center;">
+			<img src="{{.QRCode}}" /><br />
+			{{.CurrPlace}}
+			</div>
+		{{end}}
+        {{template "footer" .}}
+    </body>
+</html>
+{{end}}
