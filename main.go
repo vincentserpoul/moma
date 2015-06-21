@@ -327,7 +327,7 @@ func (red *RedisHandler) AdminEvent(w http.ResponseWriter, r *http.Request, ps h
 				alreadyAssigned = true
 			}
 		}
-		for _, usrEventTeam2 := range AdmTpl.EventListTeam1 {
+		for _, usrEventTeam2 := range AdmTpl.EventListTeam2 {
 			if usrEventTeam2.Id == usrEvent.Id {
 				alreadyAssigned = true
 			}
