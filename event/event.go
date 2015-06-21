@@ -120,3 +120,75 @@ func (e *Event) GetShortWhat() string {
 	}
 	return shortEvt
 }
+
+func GetEventInEventList(id string, allEvtLst []*Event) *Event {
+	// Find the top each list
+	for _, usrEvent := range allEvtLst {
+		if usrEvent.Id == id {
+			return usrEvent
+		}
+	}
+
+	return nil
+}
+
+func GetStartingEvent(team string, allEvtLst []*Event) *Event {
+	// Find the top each list
+	for _, usrEvent := range allEvtLst {
+		if team == "team1" {
+			if usrEvent.StartTeam1 {
+				return usrEvent
+			}
+		}
+		if team == "team2" {
+			if usrEvent.StartTeam2 {
+				return usrEvent
+			}
+		}
+	}
+
+	return nil
+}
+
+func GetTeamEvents(team string, allEvtLst []*Event) []*Event {
+	startingEvent := GetStartingEvent(team, allEvtLst)
+	var teamEventList []*Event
+	var nextEvent *Event
+	if startingEvent == nil {
+		return teamEventList
+	}
+	nextEventId := startingEvent.NextEventId
+	safeLoop := 0
+	for nextEventId != "" {
+		nextEvent = GetEventInEventList(nextEventId, allEvtLst)
+		teamEventList = append(teamEventList, nextEvent)
+		nextEventId = nextEvent.NextEventId
+		safeLoop++
+	}
+
+	return teamEventList
+}
+
+func GetNoTeamEvents(team1EventList []*Event, team2EventList []*Event, allEvtLst []*Event) []*Event {
+	var alreadyAssigned bool
+	var noTeamEventList []*Event
+	for _, usrEvent := range allEvtLst {
+		alreadyAssigned = false
+		for _, usrEventTeam1 := range team1EventList {
+			if usrEventTeam1.Id == usrEvent.Id {
+				alreadyAssigned = true
+			}
+		}
+		for _, usrEventTeam2 := range team2EventList {
+			if usrEventTeam2.Id == usrEvent.Id {
+				alreadyAssigned = true
+			}
+		}
+
+		if !alreadyAssigned {
+			noTeamEventList = append(noTeamEventList, usrEvent)
+		}
+	}
+
+	return noTeamEventList
+}

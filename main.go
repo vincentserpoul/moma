@@ -268,9 +268,9 @@ func (red *RedisHandler) Admin(w http.ResponseWriter, r *http.Request, ps httpro
 // AdminTemplate is going to be used foreach user
 type AdminEventTemplate struct {
 	User                 user.User
-	EventListTeam1       []event.Event
-	EventListTeam2       []event.Event
-	EventListNotAssigned []event.Event
+	EventListTeam1       []*event.Event
+	EventListTeam2       []*event.Event
+	EventListNotAssigned []*event.Event
 }
 
 // Admin is handling the get request to the main user page
@@ -284,7 +284,7 @@ func (red *RedisHandler) AdminEvent(w http.ResponseWriter, r *http.Request, ps h
 		log.Fatal(err)
 	}
 
-	var allEvtLst []event.Event
+	var allEvtLst []*event.Event
 
 	for _, userRole := range red.authoriz.AppUserRole {
 		// If he is, we get his desc
@@ -298,45 +298,13 @@ func (red *RedisHandler) AdminEvent(w http.ResponseWriter, r *http.Request, ps h
 			if err != nil {
 				log.Fatal(err)
 			}
-			allEvtLst = append(allEvtLst, evt)
+			allEvtLst = append(allEvtLst, &evt)
 		}
 	}
 
-	var nextTeam1Id = ""
-	var nextTeam2Id = ""
-
-	// reorder event list according to start bool and next
-	// Find all the starting points
-	for _, usrEvent := range allEvtLst {
-		if usrEvent.StartTeam1 || nextTeam1Id == usrEvent.Id {
-			AdmTpl.EventListTeam1 = append(AdmTpl.EventListTeam1, usrEvent)
-			nextTeam1Id = usrEvent.NextEventId
-		}
-		if usrEvent.StartTeam2 || nextTeam2Id == usrEvent.Id {
-			AdmTpl.EventListTeam2 = append(AdmTpl.EventListTeam2, usrEvent)
-			nextTeam2Id = usrEvent.NextEventId
-		}
-	}
-
-	var alreadyAssigned bool
-
-	for _, usrEvent := range allEvtLst {
-		alreadyAssigned = false
-		for _, usrEventTeam1 := range AdmTpl.EventListTeam1 {
-			if usrEventTeam1.Id == usrEvent.Id {
-				alreadyAssigned = true
-			}
-		}
-		for _, usrEventTeam2 := range AdmTpl.EventListTeam2 {
-			if usrEventTeam2.Id == usrEvent.Id {
-				alreadyAssigned = true
-			}
-		}
-
-		if !alreadyAssigned {
-			AdmTpl.EventListNotAssigned = append(AdmTpl.EventListNotAssigned, usrEvent)
-		}
-	}
+	AdmTpl.EventListTeam1 = event.GetTeamEvents("team1", allEvtLst)
+	AdmTpl.EventListTeam2 = event.GetTeamEvents("team2", allEvtLst)
+	AdmTpl.EventListNotAssigned = event.GetNoTeamEvents(AdmTpl.EventListTeam1, AdmTpl.EventListTeam2, allEvtLst)
 
 	err = templates.ExecuteTemplate(w, "admin_event_chain", AdmTpl)
 	if err != nil {
