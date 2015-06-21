@@ -1,5 +1,22 @@
 {{define "eventdetails"}}
 	<section id="dashboard">
-	{{.Event}}
+	<h1>L'anecdote</h1>
+	{{if .WhereApprox}}
+		({{.WhereApprox}})<br />
+	{{end}}
+    {{range .Pic}}
+        <img src="{{.}}" width="100%" />
+    {{end}}<br />
+	{{.What}}<br />
+    {{if .Defi}}	
+		<h1>Le d&eacute;fi</h1>
+    	{{.Defi}}<br />
+    {{end}}
+    <h1>La devinette</h1>
+    {{.NextPlaceQ}}<br />    
+    {{if .Rebus}}
+    	<h1>L'aide r&eacute;bus !</h1>
+        <img src="{{.Rebus}}" width="100%" /><br />
+    {{end}}    
 	</section>
 {{end}}

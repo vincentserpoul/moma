@@ -30,7 +30,7 @@ section#auth {
 }
 
 section#dashboard {
-    width: 80%;
+    width: 90%;
     margin: 50px auto;
     text-align: center;
     position: relative;
@@ -39,10 +39,10 @@ section#dashboard {
     border-radius: 3px;
     box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
     padding: 20px 30px;
-
+    opacity:0.8;
+    min-height:200px;
     box-sizing: border-box;
-    width: 80%;
-    margin: 65px 10% 0 10%;
+    margin: 65px 5% 0 5%;
 }
 
 /*form styles*/
@@ -254,3 +254,9 @@ legend {
   font-size:90%;
   text-align:right;
   }
+
+@media print {
+  section { 
+    page-break-inside: avoid ;
+  }
+}

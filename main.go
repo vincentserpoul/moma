@@ -86,6 +86,7 @@ func main() {
 	protectedRouter.GET("/admin", red.Admin)
 	protectedRouter.GET("/admin/eventlist", red.AdminEvent)
 	protectedRouter.GET("/admin/eventprint", red.AdminPrinEvent)
+	protectedRouter.GET("/admin/allprint", red.AdminAllPrint)
 
 	protectedMiddlew := interpose.New()
 	protectedMiddlew.Use(auth.Persona())
@@ -117,6 +118,7 @@ func main() {
 	publicRouter.Handler("GET", "/admin", protectedMiddlew)
 	publicRouter.Handler("GET", "/admin/eventlist", protectedMiddlew)
 	publicRouter.Handler("GET", "/admin/eventprint", protectedMiddlew)
+	publicRouter.Handler("GET", "/admin/allprint", protectedMiddlew)
 
 	log.Fatal(http.ListenAndServe(config.Port, publicRouter))
 }
@@ -387,6 +389,47 @@ func (red *RedisHandler) AdminPrinEvent(w http.ResponseWriter, r *http.Request, 
 	AdmTpl.EventListTeam2 = event.GetTeamEvents("team2", allEvtLst)
 
 	err = templates.ExecuteTemplate(w, "admin_print_event_chain", AdmTpl)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+type AdminPrintEventTemplate struct {
+	AllEvents []*event.Event
+}
+
+// Admin is handling the get request to the main user page
+func (red *RedisHandler) AdminAllPrint(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	var AdmTpl AdminPrintEventTemplate
+	var err error
+
+	_, err = user.GetUserByEmail(red.RedisConn, auth.GetEmail(r))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var allEvtLst []*event.Event
+
+	for _, userRole := range red.authoriz.AppUserRole {
+		// If he is, we get his desc
+		usr, err := user.GetUserByEmail(red.RedisConn, userRole.UserID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, eventID := range usr.EventList {
+			evt, err := event.GetEventById(red.RedisConn, eventID)
+			if err != nil {
+				log.Fatal(err)
+			}
+			allEvtLst = append(allEvtLst, &evt)
+		}
+	}
+
+	AdmTpl.AllEvents = allEvtLst
+
+	err = templates.ExecuteTemplate(w, "allprint", AdmTpl)
 	if err != nil {
 		log.Fatal(err)
 	}

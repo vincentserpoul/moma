@@ -1,0 +1,39 @@
+{{define "allprint"}}
+<!doctype html>
+<html class="no-js" lang="fr">
+    {{template "headmini"}}
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+		{{range .AllEvents}}
+			<section id="dashboard" >
+			<h1>L'anecdote</h1>
+			{{if .Who}}
+				<h2>({{.Who}})</h2>
+			{{end}}
+			{{if .WhereApprox}}
+				({{.WhereApprox}})<br />
+			{{end}}
+		    {{range .Pic}}
+		        <img src="{{.}}" width="100%" />
+		    {{end}}<br />
+			{{.What}}<br />
+		    {{if .Defi}}	
+				<h1>Le d&eacute;fi</h1>
+		    	{{.Defi}}<br />
+		    {{end}}
+		    {{if .Defi}}
+		    	<h1>La devinette</h1>
+		    {{end}}
+		    {{.NextPlaceQ}}<br />    
+		    {{if .Rebus}}
+		    	<h1>L'aide r&eacute;bus !</h1>
+		        <img src="{{.Rebus}}" width="100%" /><br />
+		    {{end}}    
+			</section>
+		{{end}}
+    </body>
+</html>
+
+{{end}}
