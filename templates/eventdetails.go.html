@@ -1,23 +1,20 @@
 {{define "eventdetails"}}
 	<section id="dashboard">
-	<h1>Cette fois, la chance vous a souris, s&eacute;minaristes.</h1>
-		Vous êtes bien arriv&eacute;s à l'&eacute;tape {{.CurrPlace}}.
+	<h1>Cette fois, la chance a souri à vos disciples.</h1>
+		Vous êtes bien arriv&eacute; à l'&eacute;tape {{.CurrPlace}}.
     {{if .Defi}}	
-		<h3>Voilà votre &eacute;preuve</h3>
-		<i>Afin de prouver votre soumission, des preuves photos ou videos sont n&eacute;cessaires !</i><br /><br />
+		<h3>Voilà l'&eacute;preuve à laquelle vos larbins devront se soumettre</h3>
+		<i>Afin de prouver leur soumission, des preuves photos ou videos sont n&eacute;cessaires !</i><br /><br />
     	{{.Defi}}<br /><br />
     {{end}}
-    <i>Nous avons bien peur que vous ne soyez pas à la hauteur pour d&eacute;chiffrer l'emplacement de votre prochain tourment, aussi, nous daignons vous laisser quelques indices, afin de vous aider dans votre p&eacute;lerinage et trouver votre chemin vers l'illumination.</i><br /><br />
+    <i>Nous avons bien peur que ces moins que rien ne soient pas à la hauteur pour d&eacute;chiffrer l'emplacement de leur prochain tourment; aussi, nous daignons leur laisser quelques indices, afin de les aider dans leur p&eacute;lerinage et trouver le chemin vers la rédemption.</i><br /><br />
     {{.NextPlaceQ}}<br />    
     {{if .Rebus}}
     <br />
         <img src="{{.Rebus}}" width="100%" /><br />
     {{end}}
-	<h3>En r&eacute;compense, voici un verset sur l'un de vos dieux</h3>
-	<i>(si l'un d'entre vous est un tant soit peu erudit, il en trouvera l'ann&eacute;e et l'auteur(e), des points seront distribu&eacute;s)</i><br />
-	{{if .WhereApprox}}
-		({{.WhereApprox}})<br />
-	{{end}}
+	<h3>En r&eacute;compense, voici un verset sur leur dieu</h3>
+	<i>(si l'un d'entre eux est un tant soit peu erudit, il en trouvera l'ann&eacute;e et l'auteur(e), des points seront distribu&eacute;s)</i><br />
     {{range .Pic}}
         <img src="{{.}}" width="100%" />
     {{end}}<br />
