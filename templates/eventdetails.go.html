@@ -1,6 +1,20 @@
 {{define "eventdetails"}}
 	<section id="dashboard">
-	<h1>L'anecdote</h1>
+	<h1>Cette fois, la chance vous a souris, s&eacute;minaristes.</h1>
+		Vous êtes bien arriv&eacute;s à l'&eacute;tape {{.CurrPlace}}.
+    {{if .Defi}}	
+		<h3>Voilà votre &eacute;preuve</h3>
+		<i>Afin de prouver votre soumission, des preuves photos ou videos sont n&eacute;cessaires !</i><br /><br />
+    	{{.Defi}}<br /><br />
+    {{end}}
+    <i>Nous avons bien peur que vous ne soyez pas à la hauteur pour d&eacute;chiffrer l'emplacement de votre prochain tourment, aussi, nous daignons vous laisser quelques indices, afin de vous aider dans votre p&eacute;lerinage et trouver votre chemin vers l'illumination.</i><br /><br />
+    {{.NextPlaceQ}}<br />    
+    {{if .Rebus}}
+    <br />
+        <img src="{{.Rebus}}" width="100%" /><br />
+    {{end}}
+	<h3>En r&eacute;compense, voici un verset sur l'un de vos dieux</h3>
+	<i>(si l'un d'entre vous est un tant soit peu erudit, il en trouvera l'ann&eacute;e et l'auteur(e), des points seront distribu&eacute;s)</i><br />
 	{{if .WhereApprox}}
 		({{.WhereApprox}})<br />
 	{{end}}
@@ -8,15 +22,5 @@
         <img src="{{.}}" width="100%" />
     {{end}}<br />
 	{{.What}}<br />
-    {{if .Defi}}	
-		<h1>Le d&eacute;fi</h1>
-    	{{.Defi}}<br />
-    {{end}}
-    <h1>La devinette</h1>
-    {{.NextPlaceQ}}<br />    
-    {{if .Rebus}}
-    	<h1>L'aide r&eacute;bus !</h1>
-        <img src="{{.Rebus}}" width="100%" /><br />
-    {{end}}    
 	</section>
 {{end}}
