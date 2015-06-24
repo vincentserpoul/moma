@@ -1,12 +1,13 @@
 {{define "eventdetails"}}
 	<section id="dashboard">
-	<h1>Cette fois, la chance a souri à vos disciples.</h1>
+	<h1>Dieu miséricordieux, grâce à vos dons divinatoires et vos disciples, la chance vous a souri !</h1>
 		Vous êtes bien arriv&eacute; à l'&eacute;tape {{.CurrPlace}}.
     {{if .Defi}}	
-		<h3>Voilà l'&eacute;preuve à laquelle vos larbins devront se soumettre</h3>
-		<i>Afin de prouver leur soumission, des preuves photos ou videos sont n&eacute;cessaires !</i><br /><br />
+		<h3>Ici vous attend l'épreuve qui montrera votre divinité à tous vos disciples et autres païens.</h3>
+		<i>Comme St Thomas, ces gueux auront besoin de "voir pour y croire". Ainsi, vous devez prouver la véracité de votre épreuve par des photos ou vidéos</i><br /><br />
     	{{.Defi}}<br /><br />
     {{end}}
+    <h3>Ici se trouve la suite de votre pèlerinage</h3>
     <i>Nous avons bien peur que ces moins que rien ne soient pas à la hauteur pour d&eacute;chiffrer l'emplacement de leur prochain tourment; aussi, nous daignons leur laisser quelques indices, afin de les aider dans leur p&eacute;lerinage et trouver le chemin vers la rédemption.</i><br /><br />
     {{.NextPlaceQ}}<br />    
     {{if .Rebus}}
@@ -14,7 +15,7 @@
         <img src="{{.Rebus}}" width="100%" /><br />
     {{end}}
 	<h3>En r&eacute;compense, voici un verset sur leur dieu</h3>
-	<i>(si l'un d'entre eux est un tant soit peu erudit, il en trouvera l'ann&eacute;e et l'auteur(e), des points seront distribu&eacute;s)</i><br />
+	<i>(si l'un d'entre eux est un tant soit peu &eacute;rudit, il en trouvera l'ann&eacute;e et l'auteur(e), des points seront distribu&eacute;s)</i><br />
     {{range .Pic}}
         <img src="{{.}}" width="100%" />
     {{end}}<br />

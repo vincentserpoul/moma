@@ -275,6 +275,7 @@ type AdminEventTemplate struct {
 	EventListTeam1       []*event.Event
 	EventListTeam2       []*event.Event
 	EventListNotAssigned []*event.Event
+	AllEvents            []*event.Event
 }
 
 // Admin is handling the get request to the main user page
@@ -306,6 +307,7 @@ func (red *RedisHandler) AdminEvent(w http.ResponseWriter, r *http.Request, ps h
 		}
 	}
 
+	AdmTpl.AllEvents = allEvtLst
 	AdmTpl.EventListTeam1 = event.GetTeamEvents("team1", allEvtLst)
 	AdmTpl.EventListTeam2 = event.GetTeamEvents("team2", allEvtLst)
 	AdmTpl.EventListNotAssigned = event.GetNoTeamEvents(AdmTpl.EventListTeam1, AdmTpl.EventListTeam2, allEvtLst)

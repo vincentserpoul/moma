@@ -1,5 +1,6 @@
 {{define "admin_event_chain_list"}}
             {{$eventListNotAssigned := .EventListNotAssigned}}
+            {{$allEvents := .AllEvents}}
     <section id="dashboard">
     	<h1>TEAM 1</h1>
             {{range .EventListTeam1}}
@@ -49,7 +50,7 @@
                     <select name="NextEventId">
                         {{$selectedNextEventId := .NextEventId}}
                         <option value="" />c'est la derniere etape</option>
-                        {{range $eventListNotAssigned}}
+                        {{range $allEvents}}
                             <option value="{{.Id}}" {{if eq .Id $selectedNextEventId}}selected="selected"{{end}}>{{.Id}} ({{.Email}}) {{.GetShortWhat}}</option>
                         {{end}}
                     </select><br />
@@ -110,7 +111,7 @@
                     <select name="NextEventId">
                         {{$selectedNextEventId := .NextEventId}}
                         <option value="" />c'est la derniere etape</option>
-                        {{range $eventListNotAssigned}}
+                        {{range $allEvents}}
                             <option value="{{.Id}}" {{if eq .Id $selectedNextEventId}}selected="selected"{{end}}>{{.Id}} ({{.Email}}) {{.GetShortWhat}}</option>
                         {{end}}
                     </select><br />
@@ -123,7 +124,7 @@
             </form>
             {{end}}  
         <h1>A ENQUILLER !</h1>
-            {{range $eventListNotAssigned}}
+            {{range $allEvents}}
             <h2>{{.Id}} ({{.Email}})</h2>
             <form id="form_{{.Id}}" class="pure-form pure-form-stacked">
                 <fieldset>
@@ -170,7 +171,7 @@
                     <select name="NextEventId">
                         {{$selectedNextEventId := .NextEventId}}
                         <option value="" />c'est la derniere etape</option>
-                        {{range $eventListNotAssigned}}
+                        {{range $allEvents}}
                             <option value="{{.Id}}" {{if eq .Id $selectedNextEventId}}selected="selected"{{end}}>{{.Id}} ({{.Email}}) {{.GetShortWhat}}</option>
                         {{end}}
                     </select><br />

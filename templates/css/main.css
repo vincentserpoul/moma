@@ -13,13 +13,13 @@
 #map { height: 180px;width:100%; }
 
 html {
-  /*background: url("../img/bgd.jpg") no-repeat center center fixed;*/
-    background: url("../img/seminariste.jpg") no-repeat center center fixed;  
+  background: url("../img/bgd.jpg") no-repeat center center fixed;
+    /*background: url("../img/seminariste.jpg") no-repeat center center fixed;  */
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  background-color: #000;
+  /*background-color: #000;*/
 }
 
 body{
